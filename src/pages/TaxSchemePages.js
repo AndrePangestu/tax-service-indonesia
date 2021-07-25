@@ -6,7 +6,6 @@ import { numberToMoney } from '../utils/format'
 export default function TaxSchemePages() {
 
   const [income, setIncome] = useState('')
-  // const [resultAnnualIncome, setResultAnnualIncome]
   const [showAnnualIncome, setAnnualIncome] = useState('')
   const [resultTax, setResultTax] = useState('')
   const [status, setStatus] = useState('')
@@ -33,9 +32,10 @@ export default function TaxSchemePages() {
     }
   ]
 
-  const taxCalculation = () => {
+  const taxCalculation = (e) => {
+    e.preventDefault();
     let annualIncome = income * 12 - status;
-    setAnnualIncome(annualIncome)
+    setAnnualIncome(numberToMoney(annualIncome))
     let annualTax;
 
     if(annualIncome > 500000000){
@@ -78,58 +78,61 @@ export default function TaxSchemePages() {
           column
           alignItems="center"
         >
-          <FlexboxStyles
-            alignItems="center"
-          >
-            <span>Monthly Salary : </span>
-            <InputStyles
-              type="number" 
-              margin="10px" 
-              onChange={(e) => setIncome(e.target.value)}
-            />
-          </FlexboxStyles>
+          <form onSubmit={taxCalculation}>
+            <FlexboxStyles
+              alignItems="center"
+            >
+              <span>Monthly Salary : </span>
+              <InputStyles
+                type="number" 
+                margin="10px" 
+                onChange={(e) => setIncome(e.target.value)}
+                required
+              />
+            </FlexboxStyles>
 
-          <FlexboxStyles>
-            <span>Status : </span>
-            <select onChange={handleSelect}>
-              <option>Input Status</option>
-              {taxReliefArr.map((data, i) => {
-                return(
-                  <option
-                    key={i}
-                    value={data.value}
-                  >
-                    {data.title}
-                  </option>
-                )
-              })}
-            </select>
-          </FlexboxStyles>
-          
-          <ButtonStyles
-            onClick={taxCalculation}
-            margin="10px"
-          >
-            Calculate Tax
-          </ButtonStyles>
+            <FlexboxStyles>
+              <span>Status : </span>
+              <select onChange={handleSelect} required>
+                <option value="">Input Status</option>
+                {taxReliefArr.map((data, i) => {
+                  return(
+                    <option
+                      key={i}
+                      value={data.value}
+                    >
+                      {data.title}
+                    </option>
+                  )
+                })}
+              </select>
+            </FlexboxStyles>
+            
+            <ButtonStyles
+              type="submit"
+              margin="10px"
+            >
+              Calculate Tax
+            </ButtonStyles>
+          </form>
 
           <ContainerStyles
             margin="10px"
           >
             <ContainerStyles>
-              <span>Annual taxable income = {showAnnualIncome ? showAnnualIncome + ' IDR' : ''}</span>
+              <span>
+                Annual taxable income = <b>{showAnnualIncome}</b> {showAnnualIncome ? ' IDR' : ''}
+              </span>
             </ContainerStyles>
             <ContainerStyles>
               <span>
-                Annual tax income = {resultTax ? resultTax + ' IDR' : ''}
+                Annual tax income = <b>{resultTax}</b> {resultTax ? ' IDR' : ''}
               </span>
             </ContainerStyles>
           </ContainerStyles>
         </FlexboxStyles>
       </ContainerStyles>
 
-
-      
     </LayoutPages>
   )
 }
