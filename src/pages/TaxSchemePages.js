@@ -88,6 +88,7 @@ export default function TaxSchemePages() {
                 margin="10px" 
                 onChange={(e) => setIncome(e.target.value)}
                 required
+                data-testid="income-input"
               />
             </FlexboxStyles>
 
